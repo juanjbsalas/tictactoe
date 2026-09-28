@@ -15,7 +15,7 @@
     "test:cov": "vitest run --coverage"
   },
   "keywords": [],
-  "author": "",
+  "author": "Juan Salas <jbsalas05@gmail.com>",
   "license": "ISC",
   "devEngines": {
     "packageManager": {
