@@ -1,0 +1,12 @@
+node_modules
+dist
+dist-ssr
+coverage
+*.tsbuildinfo
+*.local
+
+.vscode/*
+!.vscode/extensions.json
+
+.DS_Store
+*.log

@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@theme {
+  --color-player-x: oklch(0.62 0.19 260);
+  --color-player-o: oklch(0.65 0.2 25);
+}
+
+body {
+  background-color: oklch(0.16 0.01 260);
+}
