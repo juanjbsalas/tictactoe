@@ -271,7 +271,7 @@ describe("playMove — turn switching", () => {
     state = playMove(state, 4, 0);
     expect(state.currentPlayer).toBe("O");
 
-    state = playMove(state, 4, 1); // board 4 is still open, so O must play there too
+    state = playMove(state, 0, 1);
     expect(state.currentPlayer).toBe("X");
   });
 
@@ -279,7 +279,7 @@ describe("playMove — turn switching", () => {
     let state = createInitialState();
     state = playMove(state, 4, 0);
     expect(state.moveCount).toBe(1);
-    state = playMove(state, 4, 1);
+    state = playMove(state, 0, 1);
     expect(state.moveCount).toBe(2);
   });
 
@@ -289,65 +289,49 @@ describe("playMove — turn switching", () => {
   });
 });
 
-describe("playMove — sticky board routing", () => {
+describe("playMove — board routing", () => {
   for (let cellIndex = 0; cellIndex < 9; cellIndex++) {
-    it(`stays active on board 4 after playing cell ${cellIndex}, since the board isn't finished`, () => {
-      // Only one mark goes down, so board 4 can never be decided by this
-      // move alone — whichever cell is chosen, the board stays sticky.
+    it(`routes the opponent to board ${cellIndex} after a move on cell ${cellIndex}`, () => {
       const state = playMove(createInitialState(), 4, cellIndex);
-      expect(state.activeBoard).toBe(4);
+      expect(state.activeBoard).toBe(cellIndex);
       expect(state.freePass).toBe(false);
     });
   }
 
-  it("keeps the same board active across several moves while it remains open", () => {
-    let state = fixture({ activeBoard: 2 });
-    state = playMove(state, 2, 0);
-    expect(state.activeBoard).toBe(2);
-    state = playMove(state, 2, 4);
-    expect(state.activeBoard).toBe(2);
+  it("keeps routing consistent regardless of which board the move was made in", () => {
+    // Playing cell 6 in board 0 routes to board 6, same as cell 6 anywhere else.
+    const state = playMove(createInitialState(), 0, 6);
+    expect(state.activeBoard).toBe(6);
   });
+});
 
-  it("releases the board to a free choice once the move just played wins it", () => {
+describe("playMove — free pass", () => {
+  it("grants a free pass when routed into an already-won board", () => {
     const state = fixture({
-      activeBoard: 0,
+      activeBoard: 2,
+      boardResults: results({ 5: "O" }),
       boards: (() => {
         const boards = emptyBoards();
-        boards[0] = cells({ 0: "X", 1: "X", 3: "O", 4: "O" });
+        boards[5] = cells({ 0: "O", 4: "O", 8: "O" });
         return boards;
       })(),
     });
-    const next = playMove(state, 0, 2); // X completes the top row of board 0
-    expect(next.boardResults[0]).toBe("X");
+    const next = playMove(state, 2, 5); // cell 5 routes to board 5, which is already won
     expect(next.activeBoard).toBeNull();
     expect(next.freePass).toBe(true);
   });
 
-  it("releases the board to a free choice once the move just played draws it", () => {
+  it("grants a free pass when routed into an already-drawn board", () => {
     const state = fixture({
-      activeBoard: 0,
-      boards: (() => {
-        const boards = emptyBoards();
-        boards[0] = cells({
-          0: "X",
-          1: "O",
-          2: "X",
-          3: "X",
-          4: "O",
-          5: "O",
-          6: "O",
-          7: "X",
-        });
-        return boards;
-      })(),
+      activeBoard: 2,
+      boardResults: results({ 5: "draw" }),
     });
-    const next = playMove(state, 0, 8); // fills the board with no line for either player
-    expect(next.boardResults[0]).toBe("draw");
+    const next = playMove(state, 2, 5);
     expect(next.activeBoard).toBeNull();
     expect(next.freePass).toBe(true);
   });
 
-  it("during a free choice, any unfinished board's cells are playable", () => {
+  it("during a free pass, any unfinished board's cells are playable", () => {
     const state = fixture({
       activeBoard: null,
       freePass: true,
@@ -358,9 +342,11 @@ describe("playMove — sticky board routing", () => {
     expect(isMoveValid(state, 1, 0)).toBe(false); // board 1 already drawn
   });
 
-  it("the very first move of the game is a free choice", () => {
-    const state = createInitialState();
-    expect(getPlayableBoards(state)).toHaveLength(9);
+  it("does not grant a free pass when routed into a still-open board", () => {
+    const state = fixture({ activeBoard: 2 });
+    const next = playMove(state, 2, 5);
+    expect(next.freePass).toBe(false);
+    expect(next.activeBoard).toBe(5);
   });
 });
 
@@ -514,35 +500,22 @@ describe("playMove — game over prevents further moves", () => {
 });
 
 describe("a short realistic sequence", () => {
-  it("plays out sticky-board routing and turn order across a full small-board win", () => {
+  it("plays out routing and turn order across several real moves", () => {
     let state = createInitialState();
 
-    state = playMove(state, 4, 0); // X's free first move: board 4, cell 0
+    state = playMove(state, 4, 0); // X plays center board, top-left cell -> routes O to board 0
     expect(state.currentPlayer).toBe("O");
-    expect(state.activeBoard).toBe(4); // board 4 not finished -> stays sticky for O
+    expect(state.activeBoard).toBe(0);
 
-    state = playMove(state, 4, 3); // O must also play board 4
+    state = playMove(state, 0, 5); // O plays board 0, cell 5 -> routes X to board 5
     expect(state.currentPlayer).toBe("X");
-    expect(state.activeBoard).toBe(4);
+    expect(state.activeBoard).toBe(5);
 
-    state = playMove(state, 4, 1); // X, still board 4 (top row: X _ X pending)
-    expect(state.activeBoard).toBe(4);
-
-    state = playMove(state, 4, 4); // O, still board 4
-    expect(state.activeBoard).toBe(4);
-
-    state = playMove(state, 4, 2); // X completes the top row of board 4
-    expect(state.boardResults[4]).toBe("X");
-    expect(state.moveCount).toBe(5);
-    expect(state.winner).toBeNull(); // only one small board won so far
-
-    // Board 4 is decided, so O gets a free choice of any other open board.
-    expect(state.activeBoard).toBeNull();
-    expect(state.freePass).toBe(true);
+    state = playMove(state, 5, 4); // X plays board 5, center cell -> routes O to board 4
     expect(state.currentPlayer).toBe("O");
+    expect(state.activeBoard).toBe(4);
 
-    state = playMove(state, 0, 0); // O freely chooses board 0
-    expect(state.activeBoard).toBe(0); // now sticky on board 0 for X
-    expect(state.freePass).toBe(false);
+    expect(state.moveCount).toBe(3);
+    expect(state.winner).toBeNull();
   });
 });

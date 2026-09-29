@@ -107,17 +107,15 @@ export function playMove(
   );
 
   const winner = evaluateLargeBoard(boardResults);
-  // Sticky-board rule: the board just played in stays active for the next
-  // player unless that move just decided it (won or drawn), in which case
-  // the next player is free to choose any other open board.
-  const playedBoardFinished = boardResults[boardIndex] !== null;
-  const freePass = !winner && playedBoardFinished;
+  const targetBoard = cellIndex;
+  const targetFinished = boardResults[targetBoard] !== null;
+  const freePass = !winner && targetFinished;
 
   return {
     boards,
     boardResults,
     currentPlayer: player === "X" ? "O" : "X",
-    activeBoard: winner ? null : freePass ? null : boardIndex,
+    activeBoard: winner ? null : freePass ? null : targetBoard,
     freePass,
     winner,
     moveCount: state.moveCount + 1,

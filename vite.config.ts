@@ -4,6 +4,8 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
+  // GitHub Pages serves this project site from /tictactoe/, not the domain root.
+  base: "/tictactoe/",
   plugins: [react(), tailwindcss()],
   test: {
     environment: "jsdom",

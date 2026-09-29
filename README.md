@@ -5,10 +5,10 @@ A web implementation of Tic-Tac-Toe: nine 3×3 boards arranged in a 3×3 grid.
 ## Rules
 
 - X always moves first and may play in any cell of any board.
-- Once a player chooses which small board to play in, **both players keep playing in that same board** until it's won or drawn.
+- Wherever you play within a small board sends your opponent to the matching small board (e.g. playing in the center cell sends them to the center board).
 - Three marks in a row within a small board wins that board, which then counts as that player's mark on the large 3×3 board.
 - Three small boards in a row wins the game.
-- **Free Pass:** once a small board is won or completely full (drawn), it can no longer be played in. The next player is then free to choose any other open board.
+- **Free Pass:** if you're sent to a board that's already been won or is completely full (drawn), you may instead play in any cell of any other open board.
 - If a small board fills up with no winner, it's drawn. If every board is decided with no line on the large board, the game ends in an overall draw.
 
 See the "How to Play" section in the app itself for the same rules in context.
@@ -51,6 +51,20 @@ pnpm build
 # Preview the production build
 pnpm preview
 ```
+
+## Deploying to GitHub Pages
+
+This repo builds and deploys itself automatically via [.github/workflows/deploy.yml](.github/workflows/deploy.yml) — every push to `main` runs lint, typecheck, and tests, then publishes `dist/` to GitHub Pages.
+
+One-time setup on GitHub:
+
+1. Push this repo to GitHub (already done: `juanjbsalas/tictactoe`).
+2. On GitHub, go to **Settings → Pages**.
+3. Under **Build and deployment → Source**, select **GitHub Actions** (not "Deploy from a branch").
+4. Push to `main` (or go to **Actions** and manually run "Deploy to GitHub Pages").
+5. Once the workflow finishes, the site is live at **https://juanjbsalas.github.io/tictactoe/**.
+
+If you ever rename the repo, update `base` in [vite.config.ts](vite.config.ts) to match (`/new-repo-name/`), since GitHub Pages serves a project site from that subpath.
 
 ## Project structure
 

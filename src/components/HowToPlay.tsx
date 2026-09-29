@@ -10,8 +10,9 @@ export default function HowToPlay() {
           always moves first and may play in any cell of any board.
         </li>
         <li>
-          Once a player chooses which small board to play in, both players keep
-          playing in that same board until it's won or drawn.
+          Wherever you play within a small board sends your opponent to the
+          matching small board. For example, playing in the top-right cell sends
+          your opponent to the top-right board.
         </li>
         <li>
           Get three marks in a row in a small board to win it. A won board
@@ -22,9 +23,9 @@ export default function HowToPlay() {
           diagonally, on the large board to win the game.
         </li>
         <li>
-          <strong>Free Pass:</strong> once a small board is won or is completely
-          full (drawn), it can't be played in anymore — the next player is free
-          to choose any other open board to continue in.
+          <strong>Free Pass:</strong> if you're sent to a board that's already
+          been won or is full, you may play in any cell of any board that's
+          still open.
         </li>
         <li>
           If a small board fills up with no winner, it's drawn and can't be

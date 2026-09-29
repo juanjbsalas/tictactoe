@@ -17,12 +17,8 @@ describe("SmallBoard", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("group", { name: "Board 1, drawn" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Board 1, cell 1, empty" }),
-    ).toBeDisabled();
+    expect(screen.getByRole("group", { name: "Board 1, drawn" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Board 1, cell 1, empty" })).toBeDisabled();
   });
 
   it("labels an unfinished board that isn't currently playable", () => {
@@ -36,8 +32,6 @@ describe("SmallBoard", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("group", { name: "Board 3, not playable" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Board 3, not playable" })).toBeInTheDocument();
   });
 });

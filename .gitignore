@@ -4,12 +4,10 @@ dist-ssr
 coverage
 *.tsbuildinfo
 *.local
+dist/
 
 .vscode/*
 !.vscode/extensions.json
 
 .DS_Store
 *.log
-
-.env/*
-build/

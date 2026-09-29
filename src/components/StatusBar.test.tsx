@@ -25,11 +25,7 @@ describe("StatusBar", () => {
   });
 
   it("names the required board once one is active", () => {
-    render(
-      <StatusBar
-        state={fixture({ currentPlayer: "O", activeBoard: 5, moveCount: 1 })}
-      />,
-    );
+    render(<StatusBar state={fixture({ currentPlayer: "O", activeBoard: 5, moveCount: 1 })} />);
     expect(screen.getByRole("status")).toHaveTextContent(
       "Player O's turn. Must play in board 6.",
     );
@@ -38,18 +34,11 @@ describe("StatusBar", () => {
   it("announces a free pass", () => {
     render(
       <StatusBar
-        state={fixture({
-          currentPlayer: "X",
-          activeBoard: null,
-          freePass: true,
-          moveCount: 3,
-        })}
+        state={fixture({ currentPlayer: "X", activeBoard: null, freePass: true, moveCount: 3 })}
       />,
     );
     const status = screen.getByRole("status");
-    expect(status).toHaveTextContent(
-      "Player X's turn. Free Pass: play in any open board.",
-    );
+    expect(status).toHaveTextContent("Player X's turn. Free Pass: play in any open board.");
     expect(status.className).toMatch(/amber/);
   });
 
