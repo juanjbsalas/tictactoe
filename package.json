@@ -1,7 +1,7 @@
 {
   "name": "tictactoe",
   "version": "1.0.0",
-  "description": "Ultimate Tic-Tac-Toe",
+  "description": "Steroids Tic-Tac-Toe",
   "private": true,
   "scripts": {
     "dev": "vite",

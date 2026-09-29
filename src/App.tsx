@@ -22,7 +22,7 @@ export default function App() {
     <div className="flex min-h-screen flex-col items-center gap-5 px-4 py-8 text-slate-100 sm:gap-6">
       <header className="text-center">
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Ultimate Tic-Tac-Toe
+          Steroids Tic-Tac-Toe
         </h1>
       </header>
 

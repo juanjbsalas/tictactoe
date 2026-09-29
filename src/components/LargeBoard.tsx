@@ -13,7 +13,7 @@ export default function LargeBoard({ state, onCellClick }: LargeBoardProps) {
   return (
     <div
       role="group"
-      aria-label="Ultimate tic-tac-toe board"
+      aria-label="Steroids tic-tac-toe board"
       className="grid grid-cols-3 gap-2 rounded-xl bg-slate-700 p-2 sm:gap-3 sm:p-3"
     >
       {state.boards.map((board, boardIndex) => (
