@@ -2,6 +2,8 @@
 
 A web implementation of Tic-Tac-Toe: nine 3×3 boards arranged in a 3×3 grid.
 
+> **Note on scope:** given the small scale of this project, I've deliberately chosen not to set up CI checks on pull/push requests, and not to maintain a `DECISIONS.md`.
+
 ## Rules
 
 - X always moves first and may play in any cell of any board.
